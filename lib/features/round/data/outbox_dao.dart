@@ -12,18 +12,37 @@ class OutboxDao extends DatabaseAccessor<AppDatabase> with _$OutboxDaoMixin {
   new(super.attachedDatabase);
 
   /// Keeps a reading for [meterId], replacing any earlier one.
+  ///
+  /// With the [idempotencyKey] made when the reader tapped Save. Every
+  /// attempt to send this reading uses that key.
   Future<void> capture(
     String meterId, {
     required int value,
     required bool meterReplaced,
+    required String idempotencyKey,
   }) => into(pendingReadings).insertOnConflictUpdate(
     PendingReadingsCompanion.insert(
       meterId: meterId,
       value: value,
       meterReplaced: meterReplaced,
+      idempotencyKey: Value(idempotencyKey),
       capturedAt: DateTime.now(),
     ),
   );
+
+  /// How many readings are waiting, and again whenever that changes.
+  Stream<int> watchCount() {
+    final count = pendingReadings.meterId.count();
+    return (selectOnly(
+      pendingReadings,
+    )..addColumns([count])).map((row) => row.read(count) ?? 0).watchSingle();
+  }
+
+  /// The meters with a reading waiting, and again whenever they change.
+  Stream<Set<String>> watchMeterIds() =>
+      select(pendingReadings)
+          .watch()
+          .map((rows) => {for (final row in rows) row.meterId});
 
   /// The reading waiting for [meterId], if any.
   Future<WaitingReading?> readFor(String meterId) async =>
@@ -34,6 +53,9 @@ class OutboxDao extends DatabaseAccessor<AppDatabase> with _$OutboxDaoMixin {
       _one(meterId).watchSingleOrNull().map(_waiting);
 
   /// Notes the key an attempt is about to be sent with.
+  ///
+  /// Only for a reading saved without a key: it gets its one key here,
+  /// once. Never called for a reading that already has one.
   Future<void> setKey(String meterId, String idempotencyKey) =>
       (update(pendingReadings)..where((p) => p.meterId.equals(meterId))).write(
         PendingReadingsCompanion(idempotencyKey: Value(idempotencyKey)),

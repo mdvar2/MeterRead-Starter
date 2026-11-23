@@ -62,5 +62,73 @@
     "placeholders": {"reading": {"type": "String"}}
   },
   "discard": "Discard",
-  "@discard": {"description": "Throws away a reading that wasn't sent."}
+  "@discard": {"description": "Throws away a reading that wasn't sent."},
+  "metersLeft": "{count, plural, one{{count} meter left} other{{count} meters left}}",
+  "@metersLeft": {
+    "description": "How many meters on the round are still due, as the server counts them.",
+    "placeholders": {"count": {"type": "int"}}
+  },
+  "meterRow": "{meterNumber} · {status}",
+  "@meterRow": {
+    "description": "A meter's row on the round: the number on the meter and its status in words.",
+    "placeholders": {"meterNumber": {"type": "String"}, "status": {"type": "String"}}
+  },
+  "lastUpdated": "Last updated {time}.",
+  "@lastUpdated": {
+    "description": "How old the round on the phone is.",
+    "placeholders": {"time": {"type": "String"}}
+  },
+  "staleRound": "{reason} Last updated {time}.",
+  "@staleRound": {
+    "description": "The last fetch of the round failed: why, and how old the round on the phone is.",
+    "placeholders": {"reason": {"type": "String"}, "time": {"type": "String"}}
+  },
+  "roundNotUpdated": "Couldn't update the round.",
+  "@roundNotUpdated": {"description": "The last fetch of the round failed, for a reason other than no signal."},
+  "noSignal": "No signal. Check your connection, then try again.",
+  "@noSignal": {"description": "A request got no answer at all."},
+  "noSignalShort": "No signal.",
+  "@noSignalShort": {"description": "No signal, in a short banner."},
+  "notFound": "We couldn't find that.",
+  "@notFound": {"description": "The API has nothing at that address."},
+  "meterNotFound": "Meter not found.",
+  "@meterNotFound": {"description": "The meter isn't on this reader's round."},
+  "signedOutFailure": "You've been signed out. Sign in again.",
+  "@signedOutFailure": {"description": "The API no longer accepts the session."},
+  "serverFault": "Something went wrong on our side.",
+  "@serverFault": {"description": "The server's fault, not the reader's."},
+  "reference": "Reference {reference}",
+  "@reference": {
+    "description": "The server's trace id, which support asks for.",
+    "placeholders": {"reference": {"type": "String"}}
+  },
+  "refused": "That wasn't accepted. Check it and try again.",
+  "@refused": {"description": "The API refused what was sent, without saying which field."},
+  "wrongPassword": "That email and password don't match.",
+  "@wrongPassword": {"description": "Sign-in with a wrong email or password."},
+  "readingLabel": "Reading in kWh",
+  "@readingLabel": {"description": "Label of the reading field: the number on the meter."},
+  "readingHint": "e.g. 48 590",
+  "@readingHint": {"description": "Example reading, as people write it, with a space."},
+  "enterReading": "Enter the reading.",
+  "@enterReading": {"description": "Save tapped with nothing in the reading field."},
+  "digitsOnly": "Use digits only, like 48 590.",
+  "@digitsOnly": {"description": "The reading field has something other than digits and spaces."},
+  "sendNow": "Send now",
+  "@sendNow": {"description": "Tries to send a reading that's waiting on the phone."},
+  "notSentNoSignal": "There was no signal. It's kept on the phone.",
+  "@notSentNoSignal": {"description": "Why a waiting reading didn't go: no answer."},
+  "notSentServer": "Something went wrong on our side. It's kept on the phone.",
+  "@notSentServer": {"description": "Why a waiting reading didn't go: the server's fault."},
+  "notSentYetRow": "Not sent yet",
+  "@notSentYetRow": {"description": "On the round: this meter has a reading waiting on the phone."},
+  "signOutTitle": "Sign out?",
+  "@signOutTitle": {"description": "Title of the sign-out confirmation."},
+  "unsentReadings": "{count, plural, one{{count} reading hasn't been sent. Signing out deletes it from this phone.} other{{count} readings haven't been sent. Signing out deletes them from this phone.}}",
+  "@unsentReadings": {
+    "description": "Sign-out with readings waiting: how many will be lost.",
+    "placeholders": {"count": {"type": "int"}}
+  },
+  "cancel": "Cancel",
+  "@cancel": {"description": "Closes a dialog without doing anything."}
 }
