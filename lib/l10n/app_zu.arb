@@ -4,5 +4,6 @@
   "appTitle": "MeterRead",
   "roundTitle": "Umjikelezo wanamuhla",
   "signOut": "Phuma",
-  "tryAgain": "Zama futhi"
+  "tryAgain": "Zama futhi",
+  "metersLeft": "{count, plural, one{Kusele imitha engu-{count}} other{Kusele amamitha angu-{count}}}"
 }

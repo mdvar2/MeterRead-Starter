@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:meterread/app/widgets/failure_view.dart';
 import 'package:meterread/core/fakes/test_tools.dart';
 import 'package:meterread/features/auth/presentation/auth_controller.dart';
 import 'package:meterread/l10n/app_localizations.dart';
@@ -68,12 +69,23 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             onSubmitted: (_) => _signIn(),
           ),
           const SizedBox(height: 16),
+          // The failure in the reader's words, with the reference when
+          // it's the server's fault. "Sign in" is the way to try again.
           if (_error case final error?)
             Padding(
               padding: const EdgeInsets.only(bottom: 12),
-              child: Text(
-                '$error',
-                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    failureMessage(l10n, error, signedOut: l10n.wrongPassword),
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                  ),
+                  if (failureReference(error) case final reference?)
+                    SelectableText(l10n.reference(reference)),
+                ],
               ),
             ),
           FilledButton(

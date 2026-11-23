@@ -33,5 +33,9 @@ final class SignedIn extends AuthState {
   const new(this.reader);
 
   /// Who.
-  final Reader reader;
+  ///
+  /// Null when the app launched with a stored session but couldn't
+  /// reach the API to ask: the reader keeps working from the phone, and
+  /// the first request that gets through refreshes the session.
+  final Reader? reader;
 }

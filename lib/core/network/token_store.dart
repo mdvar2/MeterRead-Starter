@@ -1,5 +1,5 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 part 'token_store.g.dart';
 
@@ -17,26 +17,30 @@ abstract interface class TokenStore {
 }
 
 /// Keeps the refresh token in the app's preferences.
-final class PrefsTokenStore implements TokenStore {
+///
+/// Not any more: in the Android Keystore / iOS Keychain, through
+/// flutter_secure_storage. The access token never comes here: it stays in
+/// memory (see AccessToken).
+final class SecureTokenStore implements TokenStore {
   /// Creates the store.
-  new([SharedPreferencesAsync? prefs])
-    : _prefs = prefs ?? SharedPreferencesAsync();
+  new([FlutterSecureStorage? storage])
+    : _storage = storage ?? const FlutterSecureStorage();
 
-  final SharedPreferencesAsync _prefs;
+  final FlutterSecureStorage _storage;
 
   static const _key = 'refresh_token';
 
   @override
-  Future<String?> read() => _prefs.getString(_key);
+  Future<String?> read() => _storage.read(key: _key);
 
   @override
   Future<void> write(String refreshToken) =>
-      _prefs.setString(_key, refreshToken);
+      _storage.write(key: _key, value: refreshToken);
 
   @override
-  Future<void> delete() => _prefs.remove(_key);
+  Future<void> delete() => _storage.delete(key: _key);
 }
 
 /// The app's token store. Keep this name: the test harness overrides it.
 @Riverpod(keepAlive: true)
-TokenStore tokenStore(Ref ref) => PrefsTokenStore();
+TokenStore tokenStore(Ref ref) => SecureTokenStore();
